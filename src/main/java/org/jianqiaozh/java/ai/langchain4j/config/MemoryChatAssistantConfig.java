@@ -11,7 +11,4 @@ public class MemoryChatAssistantConfig {
     public ChatMemory chatMemory(){
         return MessageWindowChatMemory.withMaxMessages(10);
     }
-
-
-
 }

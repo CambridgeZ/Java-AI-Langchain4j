@@ -2,6 +2,7 @@ package org.jianqiaozh.java.ai.langchain4j;
 
 import dev.langchain4j.community.model.dashscope.QwenChatModel;
 import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
@@ -11,12 +12,14 @@ import dev.langchain4j.service.spring.AiService;
 import org.jianqiaozh.java.ai.langchain4j.assistant.Assistant;
 import org.jianqiaozh.java.ai.langchain4j.assistant.MemoryChatAssistant;
 import org.jianqiaozh.java.ai.langchain4j.assistant.SeperateChatAssistant;
+import org.jianqiaozh.java.ai.langchain4j.store.MongoChatMemoryStore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.List;
 
 @SpringBootTest
 public class ChatMemoryTest {
@@ -94,4 +97,5 @@ public class ChatMemoryTest {
         String answer2_1 = seperateChatAssistant.chat(2, "我是谁");
         System.out.println(answer2_1);
     }
+
 }
