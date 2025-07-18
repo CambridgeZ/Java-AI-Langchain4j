@@ -1,6 +1,7 @@
 package org.jianqiaozh.java.ai.langchain4j;
 
 import dev.langchain4j.community.model.dashscope.QwenChatModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
 import org.jianqiaozh.java.ai.langchain4j.assistant.Assistant;
 import org.junit.jupiter.api.Test;
@@ -13,9 +14,12 @@ public class AIServiceTest {
     @Autowired
     private QwenChatModel qwenChatModel;
 
+    @Autowired
+    private OpenAiChatModel openAiChatModel;
+
     @Test
     public void testChat() {
-        Assistant assistant = AiServices.create(Assistant.class, qwenChatModel);
+        Assistant assistant = AiServices.create(Assistant.class, openAiChatModel);
         String answer = assistant.chat("你是谁");
         System.out.println(answer);
     }
