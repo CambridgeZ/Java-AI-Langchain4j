@@ -13,13 +13,18 @@ import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.jianqiaozh.java.ai.langchain4j.store.MongoChatMemoryStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -38,22 +43,23 @@ public class XiaozhiAgentConfig {
 
     }
 
-//    @Bean
-//    ContentRetriever contentRetrieverXiaozhi(){
-//        Document document1 = FileSystemDocumentLoader.loadDocument("src/main/resources/knowledge/医院信息.md");
-//        Document document2 = FileSystemDocumentLoader.loadDocument("src/main/resources/knowledge/科室信息.md");
-//        Document document3 = FileSystemDocumentLoader.loadDocument("src/main/resources/knowledge/神经内科.md");
-//
-//        List<Document> documents = Arrays.asList(document1, document2, document3);
-//
-//        // 使用内存向量存储
-//        InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
-//
-//        // 使用默认文档分割器
-//        EmbeddingStoreIngestor.ingest(documents, embeddingStore);
-//
-//        return EmbeddingStoreContentRetriever.from(embeddingStore);
-//    }
+    @Bean
+    ContentRetriever contentRetrieverXiaozhi(){
+        Document document1 = FileSystemDocumentLoader.loadDocument("src/main/resources/knowledge/医院信息.md");
+        Document document2 = FileSystemDocumentLoader.loadDocument("src/main/resources/knowledge/科室信息.md");
+        Document document3 = FileSystemDocumentLoader.loadDocument("src/main/resources/knowledge/神经内科.md");
+
+        List<Document> documents = Arrays.asList(document1, document2, document3);
+
+        // 使用内存向量存储
+        InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+
+        // 使用默认文档分割器
+        EmbeddingStoreIngestor.ingest(documents, embeddingStore);
+
+        return EmbeddingStoreContentRetriever.from(embeddingStore);
+    }
+
     @Autowired
     private EmbeddingModel embeddingModel;
 
@@ -65,5 +71,39 @@ public class XiaozhiAgentConfig {
                 .maxResults(1)
                 .minScore(0.2)
                 .build();
+    }
+
+    @Bean
+    ContentRetriever contentRetrieverXiaozhiAcademic() throws IOException {
+        String path = "src/main/resources/knowledge/testPaper.pdf";
+        File file = new File(path);
+
+        try (PDDocument pdDocument = PDDocument.load(file)) {
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            String text = pdfStripper.getText(pdDocument);
+
+            // 更高效地处理换行符
+            StringBuilder textBuilder = new StringBuilder();
+            for (int i = 0; i < text.length(); i++) {
+                char c = text.charAt(i);
+                if (c != '\n' && c != '\r') {
+                    textBuilder.append(c);
+                } else {
+                    // 添加双换行符
+                    textBuilder.append("\n\n");
+                }
+            }
+            String processedText = textBuilder.toString();
+
+            Document document = Document.from(processedText);
+            InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+
+            EmbeddingStoreIngestor.ingest(Collections.singletonList(document), embeddingStore);
+
+            return EmbeddingStoreContentRetriever.from(embeddingStore);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e; // 重新抛出异常以便@Bean方法能正确处理
+        }
     }
 }

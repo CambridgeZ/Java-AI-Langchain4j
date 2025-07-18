@@ -10,13 +10,17 @@ import reactor.core.publisher.Flux;
 @AiService(
         wiringMode = AiServiceWiringMode.EXPLICIT,
 //        chatModel = "qwenChatModel",
-        streamingChatModel = "qwenStreamingChatModel",
+//        streamingChatModel = "qwenStreamingChatModel",
+        chatModel = "openAiChatModel",
+//        streamingChatModel = "openAiStreamingChatModel",
         chatMemoryProvider = "chatMemoryProviderXiaozhi",
-        tools = "appointmentTools",
-        contentRetriever = "contentRetrieverXiaozhiPincone"
+//        tools = "appointmentTools",
+//        contentRetriever = "contentRetrieverXiaozhiPincone" // 采用向量数据库的
+        contentRetriever = "contentRetrieverXiaozhiAcademic"
 )
 public interface XiaozhiAgent {
 
-    @SystemMessage(fromResource = "xiaozhi-prompt-template.txt")
-    Flux<String> chat(@MemoryId Long memoryId, @UserMessage String userMessage);
+//    @SystemMessage(fromResource = "xiaozhi-prompt-template.txt")
+    @SystemMessage(fromResource = "xiaozhi-academic-prompt.txt")
+    String chat(@MemoryId Long memoryId, @UserMessage String userMessage);
 }
