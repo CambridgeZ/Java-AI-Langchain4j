@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
-@Tag(name = "硅谷小智")
+@Tag(name = "小智学术")
 @RestController
 @RequestMapping("/xiaozhi")
 public class XiaozhiController {

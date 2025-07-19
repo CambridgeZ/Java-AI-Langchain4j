@@ -14,7 +14,7 @@ import reactor.core.publisher.Flux;
         chatModel = "openAiChatModel",
 //        streamingChatModel = "openAiStreamingChatModel",
         chatMemoryProvider = "chatMemoryProviderXiaozhi",
-//        tools = "appointmentTools",
+        tools = "xiaozhiTools",
 //        contentRetriever = "contentRetrieverXiaozhiPincone" // 采用向量数据库的
         contentRetriever = "contentRetrieverXiaozhiAcademic"
 )

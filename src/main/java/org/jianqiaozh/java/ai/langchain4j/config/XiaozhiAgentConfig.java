@@ -2,12 +2,11 @@ package org.jianqiaozh.java.ai.langchain4j.config;
 
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
-import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
@@ -16,6 +15,7 @@ import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.jianqiaozh.java.ai.langchain4j.store.MongoChatMemoryStore;
+import org.jianqiaozh.java.ai.langchain4j.tools.XiaozhiTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -100,10 +100,18 @@ public class XiaozhiAgentConfig {
 
             EmbeddingStoreIngestor.ingest(Collections.singletonList(document), embeddingStore);
 
+            System.out.println("文件已经被转化为存储在内存当中的向量数据库");
+
             return EmbeddingStoreContentRetriever.from(embeddingStore);
         } catch (IOException e) {
             e.printStackTrace();
             throw e; // 重新抛出异常以便@Bean方法能正确处理
         }
     }
+
+    @Bean
+    XiaozhiTools xiaozhiTools() {
+        return new XiaozhiTools();
+    }
+
 }
