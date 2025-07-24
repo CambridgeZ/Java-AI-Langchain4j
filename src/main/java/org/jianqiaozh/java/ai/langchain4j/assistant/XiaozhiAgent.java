@@ -19,7 +19,6 @@ import reactor.core.publisher.Flux;
         contentRetriever = "contentRetrieverXiaozhiAcademic"
 )
 public interface XiaozhiAgent {
-
 //    @SystemMessage(fromResource = "xiaozhi-prompt-template.txt")
     @SystemMessage(fromResource = "xiaozhi-academic-prompt.txt")
     String chat(@MemoryId Long memoryId, @UserMessage String userMessage);

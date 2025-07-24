@@ -58,7 +58,7 @@ public class ChatMemoryTest {
 
         AiServices
                 .builder(Assistant.class)
-                .chatLanguageModel(qwenChatModel)
+                .chatModel(qwenChatModel)
                 .chatMemory(messageWindowChatMemory)
                 .build();
 
